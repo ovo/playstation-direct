@@ -5,10 +5,18 @@ import { webhook, delayTime, productCodes } from './util/config';
 
 const init = async (prevStatus, prevQueue) => {
   const productResp = await fetch(`https://api.direct.playstation.com/commercewebservices/ps-direct-us/users/anonymous/products/productList?fields=BASIC&productCodes=${productCodes.join()}`);
+  let productJson;
+
+  try {
+    productJson = await productResp.json();
+  } catch (e) {
+    return init(prevStatus, prevQueue);
+  }
+
+  const { products } = productJson;
+  const newProducts = mapProducts(products);
   const queueResp = await fetch('https://direct.playstation.com/en-us/hardware');
   const queueStatus = queueResp.status;
-  const { products } = await productResp.json();
-  const newProducts = mapProducts(products);
 
   if (Object.keys(prevStatus).length === 0) {
     console.log('Monitor started');
