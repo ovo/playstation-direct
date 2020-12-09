@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-const sendWebhook = (webhook, name, status) => fetch(webhook, {
+export const sendProduct = (webhook, name, status) => fetch(webhook, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -10,4 +10,12 @@ const sendWebhook = (webhook, name, status) => fetch(webhook, {
   }),
 });
 
-export default sendWebhook;
+export const sendQueue = (webhook, status) => fetch(webhook, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    content: `Queue ${status} at https://direct.playstation.com/`,
+  }),
+});

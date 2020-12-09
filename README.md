@@ -1,5 +1,5 @@
 # playstation-direct
-Monitor https://direct.playstation.com
+Monitors https://direct.playstation.com queue and product stock
 
 ## Usage
 - Clone repo and open in command prompt or terminal
