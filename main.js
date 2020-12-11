@@ -15,7 +15,19 @@ const init = async (prevStatus, prevQueue) => {
 
   const { products } = productJson;
   const newProducts = mapProducts(products);
-  const queueResp = await fetch('https://direct.playstation.com/en-us/hardware');
+  const queueResp = await fetch('https://direct.playstation.com/', {
+    headers: {
+      Host: 'direct.playstation.com',
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:84.0) Gecko/20100101 Firefox/84.0',
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.5',
+      'Accept-Encoding': 'gzip, deflate, br',
+      DNT: 1,
+      Connection: 'keep-alive',
+      'Upgrade-Insecure-Requests': 1,
+    },
+    redirect: 'manual',
+  });
   const queueStatus = queueResp.status;
 
   if (Object.keys(prevStatus).length === 0) {
@@ -24,7 +36,7 @@ const init = async (prevStatus, prevQueue) => {
   }
 
   if (queueStatus !== prevQueue) {
-    if (queueStatus === 302) {
+    if (queueResp.redirected) {
       await sendQueue(webhook, 'live');
     } else {
       await sendQueue(webhook, 'down');
